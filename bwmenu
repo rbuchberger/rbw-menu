@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+# Creator: Robert Buchberger
+#          robert@buchberger.cc
+#
+# Select an item from bitwarden with wofi, return value for passed query
+#
+# Usage: bwmenu [query]
+#   query: anything on the login object; username, password, totp, etc
+#   default: username
+#
+# `bw list items` takes a second or two, so we cache item names & ids. This way
+# the menu is instantaneous after the first run, and we can fetch the vault
+# while the user is selecting an item. You can still beat it if you're fast, but
+# it's far better than not caching.
+
+# Configuration ----------------------------------------------------------------
+
+query=${1:-username}
+items_file=${XDG_CACHE_HOME:-$HOME/.cache}/bwmenu_items
+
+# Helper Functions -------------------------------------------------------------
+
+# Returns the entire bitwarden vault in JSON format.
+get_vault() {
+	bww list items
+}
+
+# We only save name & ID; other fields are not cached. TSV is convenient for
+# the cut command used later.
+write_cache() {
+	echo "$1" | jq --raw-output '.[] | [.name, .id] | @tsv' >"$items_file"
+}
+
+# 1: items, 2: prompt
+show_picker() {
+	echo "$1" | wofi --dmenu --matching fuzzy --insensitive --prompt "$2"
+}
+
+# Main Script ------------------------------------------------------------------
+
+# Check if cache exists, if not, build it
+if [ ! -f "$items_file" ]; then
+	vault=$(get_vault)
+	write_cache "$vault"
+fi
+
+# Read cached items
+items=$(<"$items_file")
+
+# Create temp file for storing selected item
+chosen_item_file=$(mktemp)
+
+# Ensure it's deleted on exit
+trap 'rm -f $chosen_item_file' EXIT SIGINT SIGTERM SIGQUIT
+
+# In the background, Prompt user for input and store result in temp file
+show_picker "$items" "$query" >"$chosen_item_file" &
+
+# Runs while user is selecting an item -----------------------------------------
+
+# Store Process ID of menu, so we can wait for it later
+picker_pid=$!
+
+# Check if vault has already been fetched (first run), if not, fetch it.
+declare -p vault >&/dev/null || vault=$(get_vault)
+
+write_cache "$vault"
+
+wait "$picker_pid"
+
+# Runs after user is finished && vault is fetched. -----------------------------
+
+# Read selected item name from temp file
+chosen_item=$(<"$chosen_item_file")
+
+# Exit if user didn't select anything
+[ "$chosen_item" = "" ] && exit 1
+
+# Get id from selected item.
+chosen_id=$(echo "$chosen_item" | cut --fields 2)
+
+# Select chosen item from vault, return login.query
+echo "$vault" |
+	jq --join-output ".[] | select(.id == \"$chosen_id\") | .login.$query"
