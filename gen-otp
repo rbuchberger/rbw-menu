@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Creator: Robert Buchberger - robert@buchberger.cc
+#
+# Pipe a TOTP credential in URI format to this script to get a current code.
+# I'm sure this exists already, but I couldn't find it in a convenient bash
+# package.
+#
+# Credential should be in the standard format:
+# otpauth://totp/label?secret=base32secret&(...params),
+# Secret should be base32 encoded.
+#
+# Dependencies: trurl, oathtool
+
+credential=$(</dev/stdin)
+
+# For some reason this isn't the default, even though the spec says TOTP secrets
+# must be base32 encoded.
+oath_args=("--base32")
+
+# Helper function to get arbitrary params from the credential
+get_param() {
+	echo "$credential" | trurl --get "{query:$1}" --url-file -
+}
+
+# The next 3 params are optional, so we only add them if they exist.
+digits=$(get_param 'digits')
+[ "$digits" ] && oath_args+=("--digits=$digits")
+period=$(get_param 'period')
+[ "$period" ] && oath_args+=("--time-step-size=$period")
+algorithm=$(get_param 'algorithm')
+# The totp flag is required, but the algorithm is optional.
+[ "$algorithm" ] && oath_args+=("--totp=$algorithm") || oath_args+=("--totp")
+
+# The secret is required, and it should be the last argument.
+oath_args+=("$(get_param 'secret')")
+
+# Run oathtool with the generated args
+oathtool "${oath_args[@]}"
