@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Creator: Robert Buchberger - robert@buchberger.cc
+#
+# Synchronize local vault, unlock if necessary.
+
+# Check for remote server access
+bw_host=$(trurl --get '[host]' --url "$(bw config server)")
+ping -c 1 "$bw_host" || (
+	echo 'no access to server' >&2
+	exit 1
+)
+
+# Logging in requires a terminal, and we probably aren't running in one. Bail if
+# we aren't logged in.
+if ! bw login --check; then
+	notify-send --app-name "bw-cli-utils" \
+		"Bitwarden Sync Error" \
+		"You are not logged in to the bw cli. Please run:\n\$ bw-unlock"
+	exit 2
+fi
+
+# We can, however, unlock the vault without a terminal.
+bww unlock --check || bw-unlock
+
+# Sync the vault
+bww sync
