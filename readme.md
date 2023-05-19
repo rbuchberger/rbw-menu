@@ -19,12 +19,12 @@ They're designed for my own particular use case, but I think they're general eno
 
 ## Dependencies
 
-- [gnupg] + a working private GPG key. If password protected, a GUI pinentry is also advisable.
-- [bitwarden-cli] - Configured, but not necessarily logged in.
-- [jq] (JSON parser)
-- [wofi] (menu GUI). It's trivial to replace it with dmenu, or bemenu, or whatever else.
-- [trurl] - AUR (extract params from oath uri for TOTP generation)
-- [oath-toolkit] (generate TOTP)
+- [gnupg](https://gnupg.org/) + a working private GPG key. If password protected, a GUI pinentry is also advisable.
+- [bitwarden-cli](https://github.com/bitwarden/clients) - Configured, but not necessarily logged in.
+- [jq](https://github.com/stedolan/jq) - JSON parser. (The bitwarden vault is stored in JSON.)
+- [wofi](https://hg.sr.ht/~scoopta/wofi) - Optional menu GUI. Trivial to replace with dmenu, bemenu, fzf, or whatever else.
+- [trurl](https://github.com/curl/trurl) - Optional, extracts params from oath uri for TOTP generation
+- [oathtool](https://www.nongnu.org/oath-toolkit/) - Optional, generates TOTP codes
 
 ## Installation From Source
 
