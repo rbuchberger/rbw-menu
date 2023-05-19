@@ -13,10 +13,10 @@ ping -c 1 "$bw_host" || (
 	exit 1
 )
 
-# Logging in requires a terminal, and we probably aren't running in one. Bail if
+# Logging in requires a terminal, and we may not be running in one. Bail if
 # we aren't logged in.
 if ! bw login --check; then
-	notify-send --app-name "bw-cli-utils" \
+	notify-send --app-name "Bitwarden Wrapper" \
 		"Bitwarden Sync Error" \
 		"You are not logged in to the bw cli. Please run:\n\$ bw-unlock"
 	exit 2

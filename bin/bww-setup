@@ -20,8 +20,8 @@ get_master_password() {
 	# Also, who accepts arguments this way? What is this shit?
 	pinentry_result=$(
 		pinentry <<-EOF
-			SETTITLE Bitwarden CLI Utils
-			SETDESC Bitwarden CLI Utils - Unlock Vault
+			SETTITLE Bitwarden Wrapper
+			SETDESC Bitwarden Wrapper - Unlock Vault
 			SETPROMPT Master Password:
 			GETPIN
 		EOF
@@ -44,7 +44,7 @@ get_master_password() {
 if ! bw login --check; then # We are not logged in.
 	# Check if stdin and stdout are terminals, bail otherwise.
 	{ [ -t 0 ] && [ -t 1 ]; } || {
-		echo 'You need to log into bitwarden first. Please run bw-unlock' >&2
+		echo 'You need to log into bitwarden first. Please run bww-setup' >&2
 		exit 1
 	}
 

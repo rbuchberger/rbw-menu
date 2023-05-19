@@ -17,7 +17,7 @@ session_file="${XDG_CACHE_HOME:-$HOME/.cache}/bw_session.gpg"
 
 # Decrypt session file, save key to BW_SESSION.
 BW_SESSION=$(gpg --output - --quiet --decrypt "$session_file") ||
-	(echo "You need to run bw-unlock" && exit 1)
+	(echo "You need to run bww-setup" && exit 1)
 
 # Expose session key to bw
 export BW_SESSION

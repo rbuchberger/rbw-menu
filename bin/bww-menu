@@ -6,7 +6,7 @@ IFS=$'\n\t'
 #
 # Select an item from bitwarden with wofi, return value for passed query
 #
-# Usage: bwmenu [query]
+# Usage: bww-menu [query]
 #   query: anything on the login object; username, password, totp, etc
 #   default: username
 #
