@@ -41,6 +41,7 @@ They're designed for my own particular use case, but I think they're general eno
 - Show menu, print username for selected item to stdout: `$ bww-menu`
 - Show menu, copy password for selected item to clipboard: `$ bww-menu password | wl-copy`
 - Show menu, copy OTP for selected item to clipboard: `$ bww-menu totp | gen-otp | wl-copy`
+- Use a different picker: `BWW_MENU_COMMAND="fzf" bww-menu`
 
 I use these scripts with sway, though they'll work with anything. Relevant part of my config:
 
@@ -49,6 +50,10 @@ bindsym $mod+p exec bww-menu password | wl-copy
 bindsym $mod+u exec bww-menu username | wl-copy
 bindsym $mod+o exec bww-menu totp | gen-otp | wl-copy
 ```
+
+## Using a different menu
+
+By default, we use wofi. To change this, set the `BWW_MENU_COMMAND` environment variable to anything which can accept a list from STDIN, and return a single line from that list to STDOUT.
 
 ## Caveats
 

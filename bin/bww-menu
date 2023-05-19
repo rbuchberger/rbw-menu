@@ -38,7 +38,11 @@ write_cache() {
 
 # 1: items, 2: prompt
 show_picker() {
-	echo "$1" | wofi --dmenu --matching fuzzy --insensitive --prompt "$2"
+	if declare -p BWW_MENU_COMMAND >&/dev/null; then
+		eval "echo \"$1\" | $BWW_MENU_COMMAND"
+	else
+		echo "$1" | wofi --dmenu --matching fuzzy --insensitive --prompt "$2"
+	fi
 }
 
 # Main Script ------------------------------------------------------------------
