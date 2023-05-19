@@ -6,7 +6,7 @@ SCRIPTS = bw-unlock bwmenu bww gen-otp
 install:
 	@echo "Installing scripts..."
 	@for script in $(SCRIPTS); do \
-		install -D -m 755 $$script $(DESTDIR)/$$script; \
+		install -D -m 755 bin/$$script $(DESTDIR)/$$script; \
 		echo "Installed $$script"; \
 	done
 
