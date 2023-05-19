@@ -30,6 +30,9 @@ get_vault() {
 # We only save name & ID; other fields are not cached. TSV is convenient for
 # the cut command used later.
 write_cache() {
+	touch "$items_file"
+	chmod --silent 600 "$items_file"
+
 	echo "$1" | jq --raw-output '.[] | [.name, .id] | @tsv' >"$items_file"
 }
 
