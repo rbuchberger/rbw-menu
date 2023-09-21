@@ -5,7 +5,9 @@ This script allows for interactively getting credentials from [rbw](https://gith
 - **`rbw-menu`**: wofi powered menu for picking credentials.
 - `gen-otp`: reads a TOTP credential from STDIN in URI format and returns a code. (I'm surprised this doesn't exist already, but I couldn't find it.)
 
-They're designed for my own particular use case, but I think they're general enough to share.
+## Roadmap
+
+I'm not super happy with the trurl dependency or the gen-otp script. I may either Rewrite It In Rust™️ or remove it entirely if a suitable replacement is found. Beyond that, I don't plan to change much.
 
 ## Dependencies
 
@@ -15,12 +17,24 @@ They're designed for my own particular use case, but I think they're general eno
 - [trurl](https://github.com/curl/trurl) - Optional, required for TOTP codes.
 - [oathtool](https://www.nongnu.org/oath-toolkit/) - Optional, required for TOTP codes.
 
-## Installation From Source
+## Installation
+
+For all methods:
 
 0. Look over the source code.
+1. Install and set up `rbw`
+
+### From Source
+
 1. Install dependencies
-2. Configure `rbw`
-3. clone this repo, `sudo make install`
+2. clone this repo
+3. `# make install`
+
+### Packages
+
+- [AUR](https://aur.archlinux.org/packages/rbw-menu)
+
+(If you package it somewhere else, feel free to submit a PR adding it to this list.)
 
 ## Usage
 
