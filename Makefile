@@ -1,5 +1,5 @@
 DESTDIR = /usr
-SCRIPTS = bww bww-setup bww-menu bww-sync gen-otp
+SCRIPTS = rbw-menu gen-otp
 
 .PHONY: install uninstall
 
