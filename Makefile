@@ -1,5 +1,5 @@
 DESTDIR = /usr
-SCRIPTS = rbw-menu gen-otp
+SCRIPTS = rbw-menu
 
 .PHONY: install uninstall
 
