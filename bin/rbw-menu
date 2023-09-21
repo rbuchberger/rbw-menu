@@ -1,34 +1,38 @@
 #!/usr/bin/env bash
 set -euo pipefail
 IFS=$'\n\t'
-# Creator: Robert Buchberger
-#          robert@buchberger.cc
+# Creator: Robert Buchberger <robert@buchberger.cc>
+#                            @robert@spacey.space
 #
 # Select an item from bitwarden with wofi, return value for passed query
 # Dependencies: rbw installed and configured
 #
 # Usage: rbw-menu [query]
-#   query: anything on the login object; username, password, totp, etc
+#   query: "code" or anything on the login object; username, password, totp, etc
+#     - code will return a TOTP code
+#     - anything else will return the value of the query
 #   default: username
-#
 
 query=${1:-username}
 
-# 1: items, 2: prompt
-show_picker() {
+chosen_item=$(
+	# If RBW_MENU_COMMAND is set, use it to filter the list.
 	if declare -p RBW_MENU_COMMAND >&/dev/null; then
-		eval "echo \"$1\" | $RBW_MENU_COMMAND"
-	else
-		echo "$1" | wofi --dmenu --matching fuzzy --insensitive --prompt "$query"
+		eval "rbw list | $RBW_MENU_COMMAND"
+	else # use wofi
+		rbw list | wofi --dmenu --matching fuzzy --insensitive --prompt "$query"
 	fi
-}
-
-# Main Script ------------------------------------------------------------------
-
-chosen_item=$(show_picker "$(rbw list)")
+)
 
 # Exit if user didn't select anything
 declare -p chosen_item >&/dev/null || exit 1
 
-# Select chosen item from vault, return login.query
-rbw get "$chosen_item" --raw | jq --join-output ".data.$query"
+case "$query" in
+code)
+	rbw code "$chosen_item"
+	;;
+*)
+	# Select chosen item from vault, return login.query
+	rbw get "$chosen_item" --raw | jq --join-output ".data.$query"
+	;;
+esac
