@@ -13,6 +13,8 @@ IFS=$'\n\t'
 #     - anything else will return the value of the query
 #   default: username
 
+rbw unlocked &> /dev/null || rbw unlock
+
 query=${1:-username}
 
 chosen_item=$(
