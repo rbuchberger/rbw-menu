@@ -1,6 +1,8 @@
-#!/usr/bin/env bash
-set -euo pipefail
-IFS=$'\n\t'
+#!/usr/bin/env sh
+set -eu
+IFS='
+
+'
 # Creator: Robert Buchberger <robert@buchberger.cc>
 #                            @robert@spacey.space
 #
@@ -13,21 +15,23 @@ IFS=$'\n\t'
 #     - anything else will return the value of the query
 #   default: username
 
-rbw unlocked &> /dev/null || rbw unlock
+# Check if rbw is locked, redirect stderr and stdout to /dev/null. Unlock if
+# necessary.
+rbw unlocked >/dev/null 2>&1 || rbw unlock
 
 query=${1:-username}
 
 chosen_item=$(
-	# If RBW_MENU_COMMAND is set, use it to filter the list.
-	if declare -p RBW_MENU_COMMAND >&/dev/null; then
-		eval "rbw list | $RBW_MENU_COMMAND"
-	else # use wofi
+	# If RBW_MENU_COMMAND is unset, use wofi
+	if [ "${RBW_MENU_COMMAND:-}" = "" ]; then
 		rbw list | wofi --dmenu --matching fuzzy --insensitive --prompt "$query"
+	else
+		eval "rbw list | $RBW_MENU_COMMAND"
 	fi
 )
 
 # Exit if user didn't select anything
-declare -p chosen_item >&/dev/null || exit 1
+[ "$chosen_item" = "" ] && exit 1
 
 case "$query" in
 code)

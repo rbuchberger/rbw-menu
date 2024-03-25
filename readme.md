@@ -49,3 +49,10 @@ bindsym $mod+o exec rbw-menu code | wl-copy
 ## Using a different menu
 
 By default, we use wofi. To change this, set the `RBW_MENU_COMMAND` environment variable to anything which can accept a list from STDIN, and return a single line from that list to STDOUT.
+
+## Releases
+
+- 1.0 - Initial release
+- 1.1 - Remove bespoke OTP support, use `rbw code` instead
+- 1.2 - Check for and handle locked vault
+- 1.3 - Remove undocumented bash dependency; rewrite script to be POSIX sh compliant
