@@ -8,6 +8,7 @@ This does exactly what I need; I don't plan to change much.
 
 ## Dependencies
 
+- POSIX shell
 - [rbw](https://github.com/doy/rbw)
 - [jq](https://github.com/stedolan/jq) - JSON parser
 - [wofi](https://hg.sr.ht/~scoopta/wofi) - Optional menu GUI. Trivial to replace with dmenu, bemenu, fzf, or whatever else.
@@ -33,17 +34,24 @@ For all methods:
 
 ## Usage
 
-- Show menu, print username for selected item to stdout: `$ rbw-menu`
-- Show menu, copy password for selected item to clipboard: `$ rbw-menu password | wl-copy`
+This script prints out the selected result to STDOUT, so you can do whatever you want with it. If you want to avoid potentially leaking credentials via the clipboard, you can use a tool like [wtype](https://github.com/atx/wtype) which uses a virtual keyboard to type them out for you instead. This doesn't always work; some pop-up menus will close when the picker menu opens.
+
+- Show menu, print username (default) for selected item to stdout: `$ rbw-menu`
+- Show menu, print username (explicit) for selected item to stdout: `$ rbw-menu username`
+- Show menu, type out selected password: `$ rbw-menu password | wtype -`
 - Show menu, copy OTP for selected item to clipboard: `$ rbw-menu code | wl-copy`
 - Use a different picker: `RBW_MENU_COMMAND="fzf" rbw-menu`
 
 I use these scripts with sway, though they'll work with anything. Relevant part of my config:
 
 ```
-bindsym $mod+p exec rbw-menu password | wl-copy
-bindsym $mod+u exec rbw-menu username | wl-copy
-bindsym $mod+o exec rbw-menu code | wl-copy
+bindsym $mod+u exec rbw-menu username | wtype -
+bindsym $mod+p exec rbw-menu password | wtype -
+bindsym $mod+o exec rbw-menu code | wtype -
+
+bindsym $mod+ctrl+u exec rbw-menu username | wl-copy
+bindsym $mod+ctrl+p exec rbw-menu password | wl-copy
+bindsym $mod+ctrl+o exec rbw-menu code | wl-copy
 ```
 
 ## Using a different menu
