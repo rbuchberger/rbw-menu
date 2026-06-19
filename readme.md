@@ -20,7 +20,13 @@ For all methods:
 0. Look over the source code.
 1. Install and set up `rbw`
 
-### From Source
+### Manual
+
+1. Install dependencies
+2. Drop [bin/rbw-menu](bin/rbw-menu) in your path: `curl https://raw.githubusercontent.com/rbuchberger/rbw-menu/refs/heads/main/bin/rbw-menu > ~/.local/bin/rbw-menu` or similar
+3. Mark it executable (depending on how you downloaded it): `chmod +x ~/.local/bin/rbw-menu`
+
+### Scripted
 
 1. Install dependencies
 2. clone this repo
@@ -56,7 +62,7 @@ bindsym $mod+ctrl+o exec rbw-menu code | wl-copy
 
 ## Using a different menu
 
-By default, we use wofi. To change this, set the `RBW_MENU_COMMAND` environment variable to anything which can accept a list from STDIN, and return a single line from that list to STDOUT.
+By default, we use wofi. To change this, set the `RBW_MENU_COMMAND` environment variable to anything which can accept a list from STDIN, and return a single line from that list to STDOUT. That or edit the script file.
 
 ## Releases
 
