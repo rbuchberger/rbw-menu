@@ -40,12 +40,12 @@ For all methods:
 
 ## Usage
 
-This script prints out the selected result to STDOUT, so you can do whatever you want with it. If you want to avoid potentially leaking credentials via the clipboard, you can use a tool like [wtype](https://github.com/atx/wtype) which uses a virtual keyboard to type them out for you instead. This doesn't always work; some pop-up menus will close when the picker menu opens.
+This script prints out the selected result to STDOUT, so you can do whatever you want with it. If you want to avoid leaking credentials via the clipboard, you can use a tool like [wtype](https://github.com/atx/wtype) which uses a virtual keyboard to type them out for you instead. This doesn't always work; some pop-up menus will close when the picker menu opens, forcing you to use the clipboard. In these cases, there are ways to mark these contents as sensitive (such as `wlcopy --sensitive`) which will prevent clipboard managers from saving those values.
 
 - Show menu, print username (default) for selected item to stdout: `$ rbw-menu`
 - Show menu, print username (explicit) for selected item to stdout: `$ rbw-menu username`
 - Show menu, type out selected password: `$ rbw-menu password | wtype -`
-- Show menu, copy OTP for selected item to clipboard: `$ rbw-menu code | wl-copy`
+- Show menu, copy OTP for selected item to clipboard: `$ rbw-menu code | wl-copy --sensitive`
 - Use a different picker: `RBW_MENU_COMMAND="fzf" rbw-menu`
 
 I use these scripts with sway, though they'll work with anything. Relevant part of my config:
@@ -55,9 +55,9 @@ bindsym $mod+u exec rbw-menu username | wtype -
 bindsym $mod+p exec rbw-menu password | wtype -
 bindsym $mod+o exec rbw-menu code | wtype -
 
-bindsym $mod+ctrl+u exec rbw-menu username | wl-copy
-bindsym $mod+ctrl+p exec rbw-menu password | wl-copy
-bindsym $mod+ctrl+o exec rbw-menu code | wl-copy
+bindsym $mod+ctrl+u exec rbw-menu username | wl-copy --sensitive
+bindsym $mod+ctrl+p exec rbw-menu password | wl-copy --sensitive
+bindsym $mod+ctrl+o exec rbw-menu code | wl-copy --sensitive
 ```
 
 ## Using a different menu
